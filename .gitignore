@@ -1,0 +1,11 @@
+# ignore folders
+.git/
+.vs/
+bin/
+obj/
+
+# ignore files
+*.user
+*.pdf
+*.docx
+*.doc
