@@ -1,0 +1,52 @@
+﻿@page
+@model WebClient.Pages.SpaceX.CapsulesModel
+@{
+	ViewBag.Title = "Capsules";
+}
+
+<h3>Capsules</h3>
+
+<partial name="_SearchStringPartial" model="Model.Pagination!" />
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>
+				<a class="btn"
+				   asp-route-sortField="ID"
+				   asp-route-sortDirection="@Model.GetNextSortingDirection("ID")"
+				   asp-route-searchString="@Model.Pagination!.SearchString">
+					<span class="fw-bold">ID</span>					
+				</a>
+			</th>
+			<th>
+				<a class="btn"
+				   asp-route-sortField="Type"
+				   asp-route-sortDirection="@Model.GetNextSortingDirection("Type")"
+				   asp-route-searchString="@Model.Pagination!.SearchString">
+					<span class="fw-bold">Type</span>					
+				</a>
+			</th>
+			<th>
+				<a class="btn"
+				   asp-route-sortField="Status"
+				   asp-route-sortDirection="@Model.GetNextSortingDirection("Status")"
+				   asp-route-searchString="@Model.Pagination!.SearchString">
+					<span class="fw-bold">Status</span>					
+				</a>
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var curCapsule in Model.Capsules)
+		{
+			<tr>
+				<td>@curCapsule.Id</td>
+				<td>@curCapsule.Type</td>
+				<td>@curCapsule.Status</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+<partial name="_PaginationPartial" model="Model.Pagination!" />

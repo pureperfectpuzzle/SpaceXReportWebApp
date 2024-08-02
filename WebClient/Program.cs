@@ -1,3 +1,6 @@
+using Data.Interfaces;
+using Repository.SpaceX;
+
 namespace WebClient
 {
 	public class Program
@@ -6,8 +9,9 @@ namespace WebClient
 		{
 			var builder = WebApplication.CreateBuilder(args);
 
-			// Add services to the container.
-			builder.Services.AddRazorPages();
+            // Add services to the container.
+            builder.Services.AddSingleton<ISpaceXRepository, SpaceXRepository>();
+            builder.Services.AddRazorPages();
 
 			var app = builder.Build();
 
@@ -27,6 +31,10 @@ namespace WebClient
 			app.UseAuthorization();
 
 			app.MapRazorPages();
+
+			var spaceXRepository = app.Services.GetRequiredService<ISpaceXRepository>();
+			var configuration = app.Services.GetService<IConfiguration>();
+			spaceXRepository.QueryLimit = Convert.ToInt32((configuration?["QueryLimit"]) ?? "2000");
 
 			app.Run();
 		}

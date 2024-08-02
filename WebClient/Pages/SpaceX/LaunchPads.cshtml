@@ -1,0 +1,61 @@
+﻿@page
+@model WebClient.Pages.SpaceX.LaunchPadsModel
+@{
+	ViewBag.Title = "LaunchPads";
+}
+
+<h3>LaunchPads</h3>
+
+<partial name="_SearchStringPartial" model="Model.Pagination!" />
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>
+				<a class="btn"
+				   asp-route-sortField="ID"
+				   asp-route-sortDirection="@Model.GetNextSortingDirection("ID")"
+				   asp-route-searchString="@Model.Pagination!.SearchString">
+					<span class="fw-bold">ID</span>
+				</a>
+			</th>
+			<th>
+				<a class="btn"
+				   asp-route-sortField="Name"
+				   asp-route-sortDirection="@Model.GetNextSortingDirection("Name")"
+				   asp-route-searchString="@Model.Pagination!.SearchString">
+					<span class="fw-bold">Name</span>					
+				</a>
+			</th>
+			<th>
+				<a class="btn"
+				   asp-route-sortField="Status"
+				   asp-route-sortDirection="@Model.GetNextSortingDirection("Status")"
+				   asp-route-searchString="@Model.Pagination!.SearchString">
+					<span class="fw-bold">Status</span>					
+				</a>
+			</th>
+			<th>
+				<a class="btn"
+				   asp-route-sortField="Wikipedia"
+				   asp-route-sortDirection="@Model.GetNextSortingDirection("Wikipedia")"
+				   asp-route-searchString="@Model.Pagination!.SearchString">
+					<span class="fw-bold">Wikipedia</span>
+				</a>
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var curLaunchPad in Model.LaunchPads)
+		{
+			<tr>
+				<td>@curLaunchPad.Id</td>
+				<td>@curLaunchPad.Name</td>
+				<td>@curLaunchPad.Status</td>
+				<td><a href="@curLaunchPad.Wikipedia">@curLaunchPad.Wikipedia</a></td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+<partial name="_PaginationPartial" model="Model.Pagination!" />

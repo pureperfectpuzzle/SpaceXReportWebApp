@@ -1,0 +1,58 @@
+﻿@model WebClient.Utilities.Pagination
+
+<div class="text-end">
+	@if (Model.PageIndex == 1)
+	{
+		<a class="btn btn-sm disabled" disabled>
+			&lt;&lt;
+		</a>
+		<a class="btn btn-sm disabled" disabled>
+			&lt;
+		</a>
+	}
+	else
+	{
+		<a class="btn btn-sm"
+		   asp-route-sortField="@Model.SortingField"
+		   asp-route-sortDirection="@Model.SortingDirection"
+		   asp-route-searchString="@Model.SearchString"
+		   asp-route-pageIndex="1">
+			&lt;&lt;
+		</a>
+		<a class="btn btn-sm"
+		   asp-route-sortField="@Model.SortingField"
+		   asp-route-sortDirection="@Model.SortingDirection"
+		   asp-route-searchString="@Model.SearchString"
+		   asp-route-pageIndex="@Model.PrevPageIndex">
+			&lt;
+		</a>
+	}
+	<span>Page @Model.PageIndex of @Model.PageCount</span>
+	@if (Model.PageIndex == Model.PageCount)
+	{
+		<a class="btn btn-sm disabled" disabled>
+			&gt;
+		</a>
+		<a class="btn btn-sm disabled" disabled>
+			&gt;&gt;
+		</a>
+	}
+	else
+	{
+		<a class="btn btn-sm"
+		   asp-route-sortField="@Model.SortingField"
+		   asp-route-sortDirection="@Model.SortingDirection"
+		   asp-route-searchString="@Model.SearchString"
+		   asp-route-pageIndex="@Model.NextPageIndex">
+			&gt;
+		</a>
+		<a class="btn btn-sm"
+		   asp-route-sortField="@Model.SortingField"
+		   asp-route-sortDirection="@Model.SortingDirection"
+		   asp-route-searchString="@Model.SearchString"
+		   asp-route-pageIndex="@Model.PageCount">
+			&gt;&gt;
+		</a>
+	}
+</div>
+
