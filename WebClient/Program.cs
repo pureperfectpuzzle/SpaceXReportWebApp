@@ -1,5 +1,6 @@
 using Data.Interfaces;
 using Repository.SpaceX;
+using WebClient.Utilities;
 
 namespace WebClient
 {
@@ -9,8 +10,11 @@ namespace WebClient
 		{
 			var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+			// Add services to the container.
+			builder.Services.AddSingleton<IQueryContext, QueryContext>();
             builder.Services.AddSingleton<ISpaceXRepository, SpaceXRepository>();
+
+			builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
 
 			var app = builder.Build();
@@ -30,11 +34,9 @@ namespace WebClient
 
 			app.UseAuthorization();
 
+			app.MapControllers();
+			app.MapControllerRoute("reports", "reports/{controller=Admin}/{action=Index}/{id?}");
 			app.MapRazorPages();
-
-			var spaceXRepository = app.Services.GetRequiredService<ISpaceXRepository>();
-			var configuration = app.Services.GetService<IConfiguration>();
-			spaceXRepository.QueryLimit = Convert.ToInt32((configuration?["QueryLimit"]) ?? "2000");
 
 			app.Run();
 		}

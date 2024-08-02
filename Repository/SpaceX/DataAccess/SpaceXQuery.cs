@@ -1,4 +1,5 @@
-﻿using GraphQL;
+﻿using Data.Interfaces;
+using GraphQL;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.SystemTextJson;
 using ModernHttpClient;
@@ -14,9 +15,9 @@ namespace Repository.SpaceX.DataAccess
     {
         private readonly GraphQLHttpClient httpClient;
 
-        public SpaceXQuery()
+        public SpaceXQuery(IQueryContext queryContext)
         {
-            var uri = new Uri("https://spacex-production.up.railway.app/");
+            var uri = new Uri(queryContext.SpaceXApiUrl!);
             var graphQLOptions = new GraphQLHttpClientOptions
             {
                 EndPoint = uri,

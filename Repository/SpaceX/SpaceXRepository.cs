@@ -13,10 +13,12 @@ namespace Repository.SpaceX
     public class SpaceXRepository : ISpaceXRepository
     {
         private readonly SpaceXQuery query;
+        private readonly IQueryContext queryContext;
 
-        public SpaceXRepository()
+        public SpaceXRepository(IQueryContext queryContext)
         {
-            query = new SpaceXQuery();
+            this.queryContext = queryContext;
+            query = new SpaceXQuery(queryContext);
 
             capsuleCache = new DataCache<Capsule>(CapsuleAsyncLoader);
             launchCache = new DataCache<Launch>(LaunchAsyncLoader);
@@ -25,12 +27,6 @@ namespace Repository.SpaceX
         }
 
         #region ISpaceXRepository
-
-        #region QueryLimit
-
-        public int QueryLimit { get; set; } = 2000;
-
-        #endregion
 
         #region GetCapsulesAsync
 
@@ -54,7 +50,7 @@ namespace Repository.SpaceX
                     }}
                 }}
             ";
-            string queryString = string.Format(queryStringFormat, QueryLimit);
+            string queryString = string.Format(queryStringFormat, this.queryContext.QueryLimit);
 
 			var request = new GraphQLRequest()
 			{
@@ -90,7 +86,7 @@ namespace Repository.SpaceX
                     }}
                 }}
             ";
-            string queryString = string.Format(queryStringFormat, QueryLimit);
+            string queryString = string.Format(queryStringFormat, this.queryContext.QueryLimit);
 
             var request = new GraphQLRequest()
 			{
@@ -132,7 +128,7 @@ namespace Repository.SpaceX
                     }}
                 }}
             ";
-            string queryString = string.Format(queryStringFormat, QueryLimit);
+            string queryString = string.Format(queryStringFormat, this.queryContext.QueryLimit);
 
             var request = new GraphQLRequest()
             {
@@ -168,7 +164,7 @@ namespace Repository.SpaceX
                     }}
                 }}
             ";
-            string queryString = string.Format(queryStringFormat, QueryLimit);
+            string queryString = string.Format(queryStringFormat, this.queryContext.QueryLimit);
 
 			var request = new GraphQLRequest()
 			{
