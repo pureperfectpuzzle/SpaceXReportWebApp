@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Linq;
 using WebClient.Utilities;
-using WebClient.Utilities.Enums;
+using Data.Enums;
 
 namespace WebClient.Pages.SpaceX
 {
@@ -24,18 +24,6 @@ namespace WebClient.Pages.SpaceX
 		public IEnumerable<Capsule> Capsules => _capsules;
 
 		internal Pagination? Pagination => _pagination;
-
-		internal SortingDirection GetNextSortingDirection(string fieldName)
-		{
-			if (string.Compare(fieldName, this.Pagination?.SortingField??"ID", true) == 0)
-			{
-				return this.Pagination?.SortingDirection == SortingDirection.Ascending ? SortingDirection.Descending : SortingDirection.Ascending;
-			}
-            else
-            {
-                return SortingDirection.Ascending;
-            }
-        }
 
 		public async Task<ActionResult> OnGetAsync(int pageIndex = 1, string sortField = "ID", SortingDirection sortDirection = SortingDirection.Ascending, string searchString = "")
 		{

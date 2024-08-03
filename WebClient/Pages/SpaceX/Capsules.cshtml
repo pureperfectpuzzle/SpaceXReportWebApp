@@ -11,26 +11,23 @@
 <table class="table table-striped">
 	<thead>
 		<tr>
-			<th>
-				<a class="btn"
-				   asp-route-sortField="ID"
-				   asp-route-sortDirection="@Model.GetNextSortingDirection("ID")"
+			<th class ="col-3" scope="col">
+				<a asp-route-sortField="ID"
+				   asp-route-sortDirection="@Model.Pagination!.GetNextSortingDirection("ID")"
 				   asp-route-searchString="@Model.Pagination!.SearchString">
 					<span class="fw-bold">ID</span>					
 				</a>
 			</th>
-			<th>
-				<a class="btn"
-				   asp-route-sortField="Type"
-				   asp-route-sortDirection="@Model.GetNextSortingDirection("Type")"
+			<th class="col-7" scope="col">
+				<a asp-route-sortField="Type"
+				   asp-route-sortDirection="@Model.Pagination!.GetNextSortingDirection("Type")"
 				   asp-route-searchString="@Model.Pagination!.SearchString">
 					<span class="fw-bold">Type</span>					
 				</a>
 			</th>
-			<th>
-				<a class="btn"
-				   asp-route-sortField="Status"
-				   asp-route-sortDirection="@Model.GetNextSortingDirection("Status")"
+			<th class="col-2" scope="col">
+				<a asp-route-sortField="Status"
+				   asp-route-sortDirection="@Model.Pagination!.GetNextSortingDirection("Status")"
 				   asp-route-searchString="@Model.Pagination!.SearchString">
 					<span class="fw-bold">Status</span>					
 				</a>

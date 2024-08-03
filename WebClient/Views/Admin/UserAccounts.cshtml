@@ -1,0 +1,56 @@
+﻿@model UserAccountCollectionModel
+@{
+	ViewBag.Title = "UserAccounts";
+}
+
+<h3>Reports</h3>
+
+<partial name="_SearchStringPartial" model="Model.Pagination!" />
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th class="col-3" scope="col">
+				<a asp-route-sortField="ID"
+				   asp-route-sortDirection="@Model.Pagination!.GetNextSortingDirection("ID")"
+				   asp-route-searchString="@Model.Pagination!.SearchString">
+					<span class="fw-bold">ID</span>
+				</a>
+			</th>
+			<th class="col-4" scope="col">
+				<a asp-route-sortField="FirstName"
+				   asp-route-sortDirection="@Model.Pagination!.GetNextSortingDirection("FirstName")"
+				   asp-route-searchString="@Model.Pagination!.SearchString">
+					<span class="fw-bold">First Name</span>
+				</a>
+			</th>
+			<th class="col-4" scope="col">
+				<a asp-route-sortField="LastName"
+				   asp-route-sortDirection="@Model.Pagination!.GetNextSortingDirection("LastName")"
+				   asp-route-searchString="@Model.Pagination!.SearchString">
+					<span class="fw-bold">Last Name</span>
+				</a>
+			</th>
+			<th class="col-1" scope="col">
+				<a asp-route-sortField="IsAdmin"
+				   asp-route-sortDirection="@Model.Pagination!.GetNextSortingDirection("IsAdmin")"
+				   asp-route-searchString="@Model.Pagination!.SearchString">
+					<span class="fw-bold">Admin?</span>
+				</a>
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var curUser in Model.UserAccounts)
+		{
+			<tr>
+				<td>@curUser.Id</td>
+				<td>@curUser.FirstName</td>
+				<td>@curUser.LastName</td>
+				<td>@(curUser.AccountType == (int)Data.Enums.UserAccountType.Administrator)</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+<partial name="_PaginationPartial" model="Model.Pagination!" />

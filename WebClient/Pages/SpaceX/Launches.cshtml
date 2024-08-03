@@ -11,36 +11,32 @@
 <table class="table table-striped">
 	<thead>
 		<tr>
-			<th>
-				<a class="btn"
-				   asp-route-sortField="ID"
-				   asp-route-sortDirection="@Model.GetNextSortingDirection("ID")"
+			<th class="col-3" scope="col">
+				<a asp-route-sortField="ID"
+				   asp-route-sortDirection="@Model.Pagination!.GetNextSortingDirection("ID")"
 				   asp-route-searchString="@Model.Pagination!.SearchString">
 					<span class="fw-bold">ID</span>
 				</a>
 			</th>
-			<th>
-				<a class="btn"
-				   asp-route-sortField="LaunchYear"
-				   asp-route-sortDirection="@Model.GetNextSortingDirection("LaunchYear")"
+			<th class="col-2" scope="col">
+				<a asp-route-sortField="LaunchYear"
+				   asp-route-sortDirection="@Model.Pagination!.GetNextSortingDirection("LaunchYear")"
 				   asp-route-searchString="@Model.Pagination!.SearchString">
 					<span class="fw-bold">Launch Year</span>					
 				</a>				
 			</th>
-			<th>
-				<a class="btn"
-				   asp-route-sortField="MissionName"
-				   asp-route-sortDirection="@Model.GetNextSortingDirection("MissionName")"
+			<th class="col-6" scope="col">
+				<a asp-route-sortField="MissionName"
+				   asp-route-sortDirection="@Model.Pagination!.GetNextSortingDirection("MissionName")"
 				   asp-route-searchString="@Model.Pagination!.SearchString">
 					<span class="fw-bold">Mission Name</span>					
 				</a>
 			</th>
-			<th>
-				<a class="btn"
-				   asp-route-sortField="IsUpcoming"
-				   asp-route-sortDirection="@Model.GetNextSortingDirection("IsUpcoming")"
+			<th class="col-1" scope="col">
+				<a asp-route-sortField="IsUpcoming"
+				   asp-route-sortDirection="@Model.Pagination!.GetNextSortingDirection("IsUpcoming")"
 				   asp-route-searchString="@Model.Pagination!.SearchString">
-					<span class="fw-bold">Is Upcoming?</span>					
+					<span class="fw-bold">Upcoming?</span>					
 				</a>				
 			</th>
 		</tr>

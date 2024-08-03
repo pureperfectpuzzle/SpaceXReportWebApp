@@ -1,4 +1,4 @@
-﻿using WebClient.Utilities.Enums;
+﻿using Data.Enums;
 
 namespace WebClient.Utilities
 {
@@ -71,5 +71,17 @@ namespace WebClient.Utilities
         public SortingDirection SortingDirection { get; set; } = SortingDirection.Ascending;
 
         public string SearchString { get; set; } = string.Empty;
-    }
+
+        public SortingDirection GetNextSortingDirection(string fieldName)
+		{
+			if (string.Compare(fieldName, string.IsNullOrEmpty(this.SortingField) ? "ID" : this.SortingField, true) == 0)
+			{
+				return this.SortingDirection == SortingDirection.Ascending ? SortingDirection.Descending : SortingDirection.Ascending;
+			}
+			else
+			{
+				return SortingDirection.Ascending;
+			}
+		}
+	}
 }

@@ -1,0 +1,67 @@
+﻿@model ReportCollectionModel
+@{
+	ViewBag.Title = "Reports";
+}
+
+<h3>Reports</h3>
+
+<partial name="_SearchStringPartial" model="Model.Pagination!" />
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th class="col-3" scope="col">
+ 				<a asp-route-sortField="ID"
+				   asp-route-sortDirection="@Model.Pagination!.GetNextSortingDirection("ID")"
+				   asp-route-searchString="@Model.Pagination!.SearchString">
+					<span class="fw-bold">ID</span>
+				</a>
+			</th>
+			<th class="col-7" scope="col">
+ 				<a asp-route-sortField="Title"
+				   asp-route-sortDirection="@Model.Pagination!.GetNextSortingDirection("Title")"
+				   asp-route-searchString="@Model.Pagination!.SearchString">
+					<span class="fw-bold">Title</span>
+				</a>
+			</th>
+			<th scope="col"></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var curReport in Model.Reports)
+		{
+			<tr>
+				<td>@curReport.Id</td>
+				<td>@curReport.Title</td>
+				<td>
+					<a class="btn btn-outline-primary btn-sm"
+					   asp-controller="Admin"
+					   asp-action="ViewReport"
+					   asp-route-id="@curReport.Id">
+						View
+					</a>
+					<a class="btn btn-outline-primary btn-sm"
+					   asp-controller="Admin"
+					   asp-action="ModifyReport"
+					   asp-route-id="@curReport.Id">
+						Modify
+					</a>
+					<a class="btn btn-outline-primary btn-sm text-danger"
+					   asp-controller="Admin"
+					   asp-action="DeleteReport"
+					   asp-route-id="@curReport.Id">
+						Delete
+					</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+<partial name="_PaginationPartial" model="Model.Pagination!" />
+
+<a class="btn btn-lg btn-primary"
+   asp-controller="Admin"
+   asp-action="CreateReport">
+	Create
+</a>

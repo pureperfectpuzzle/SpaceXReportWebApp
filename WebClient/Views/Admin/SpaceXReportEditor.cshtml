@@ -1,0 +1,111 @@
+﻿@model SpaceXReportModel
+@{
+	ViewBag.Title = "SpaceXReport";
+}
+
+<h3 class="text-center p-2">@Model?.Title</h3>
+
+<form asp-action="@Model?.Action" method="post">
+	<div asp-validation-summary="All" class="text-danger"></div>
+	<ul class="nav nav-tabs">
+		<li class="nav-item">
+			<button class="nav-link active"
+			        type="button"
+					data-bs-toggle="tab"
+					data-bs-target="#basic"
+					role="tab"
+					aria-selected="true">
+			   Basic
+		    </button>
+		</li>
+		<li class="nav-item">
+			<button class="nav-link"
+					type="button"
+					data-bs-toggle="tab"
+					data-bs-target="#investigation"
+					role="tab"
+					aria-selected="false">
+				Investigation
+			</button>
+		</li>
+		<li class="nav-item">
+			<button class="nav-link"
+					type="button"
+					data-bs-toggle="tab"
+					data-bs-target="#qa"
+					role="tab"
+					aria-selected="false">
+				QA
+			</button>
+		</li>
+	</ul>
+	<div class="tab-content">
+		<div class="tab-pane fade show active m-3"
+			 id="basic"
+			 role="tabpanel">
+			<div class="form-group mb-3">
+				<label class="fw-bold" asp-for="Report.Id">ID</label>
+				<input class="form-control" asp-for="Report.Id" readonly>
+			</div>
+
+			<div class="form-group mb-3">
+				<label class="fw-bold" asp-for="Report.Title">Title<span class="text-danger">*</span></label>
+				<input class="form-control" asp-for="Report.Title" readonly="@Model?.IsReadOnly">
+			</div>
+
+			<div class="form-group mb-3">
+				<label class="fw-bold" asp-for="Report.Description">Description<span class="text-danger">*</span></label>
+				<textarea class="form-control" rows="5" asp-for="Report.Description" readonly="@Model?.IsReadOnly"></textarea>
+			</div>
+
+			<div class="form-group mb-3">
+				<label class="fw-bold" asp-for="Report.CreatorId">Creator ID</label>
+				<input class="form-control" asp-for="Report.CreatorId" readonly>
+			</div>
+		</div>
+		<div class="tab-pane fade m-3"
+			 id="investigation"
+			 role="tabpanel">
+			<div class="form-group mb-3">
+				<label class="fw-bold" asp-for="Report.InvestigatorId">Investigator ID</label>
+				<input class="form-control" asp-for="Report.InvestigatorId" readonly>
+			</div>
+
+			<div class="form-group mb-3">
+				<label class="fw-bold" asp-for="Report.InvestigationComments">Comments</label>
+				<textarea class="form-control" rows="5" asp-for="Report.InvestigationComments" readonly></textarea>
+			</div>
+
+			<div class="form-group mb-3">
+				<label class="fw-bold" asp-for="Report.Solution"></label>
+				<textarea class="form-control" rows="5" asp-for="Report.Solution" readonly></textarea>
+			</div>
+		</div>
+		<div class="tab-pane fade m-3"
+			 id="qa"
+			 role="tabpanel">
+			<div class="form-group mb-3">
+				<label class="fw-bold" asp-for="Report.QaId">QA ID</label>
+				<input class="form-control" asp-for="Report.QaId" readonly>
+			</div>
+
+			<div class="form-group mb-3">
+				<label class="fw-bold" asp-for="Report.QaComments">Comments</label>
+				<textarea class="form-control" rows="5" asp-for="Report.QaComments" readonly></textarea>
+			</div>
+		</div>
+	</div>
+
+	@if ((Model?.ShowAction).GetValueOrDefault())
+	{
+		<button type="submit"
+				class="btn btn-primary m-2">
+			@Model?.Action
+		</button>
+	}
+	<a class="btn btn-secondary m-2"
+	   asp-controller="Admin"
+	   asp-action="SpaceXReports">
+		Back
+    </a>
+</form>
