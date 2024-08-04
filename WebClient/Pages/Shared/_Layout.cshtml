@@ -7,23 +7,26 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/WebClient.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">SpaceXReports</a>
+                <a class="navbar-brand" asp-area="" asp-page="/Index">
+                    <div class="text-primary fs-3 fw-bolder fst-italic"><img class="me-1" src="~/assets/images/rocket.png" alt="" width="30" height="30" />SpaceXReports</div>
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                    <ul class="navbar-nav flex-grow-1 justify-content-center fw-bold">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a href="#" class="nav-link dropdown-toggle text-dark fw-bold" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 SpaceX
                             </a>
                             <ul class="dropdown-menu">
@@ -58,16 +61,19 @@
 
                     @if ((@Context.User.Identity?.IsAuthenticated).GetValueOrDefault())
                     {
-                        <a class="btn btn-sm btn-primary"
+                        <i class="fas fa-solid fa-lg fa-user text-primary me-3" 
+                           data-bs-toggle="tooltip"
+                           data-bs-placement="bottom"
+						   title="@Context.User.Identity?.Name"></i>
+                        <a class="btn btn-sm btn-outline-primary rounded-pill my-2"
                            asp-controller="Identity"
                            asp-action="Logout">
                             Logout
                         </a>
-
                     }
                     else
                     {
-                        <a class="btn btn-sm btn-primary"
+                        <a class="btn btn-sm btn-primary rounded-pill my-2"
                            asp-controller="Identity"
                            asp-action="DisplayLoginView">
                             Login
