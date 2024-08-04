@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Linq;
 using WebClient.Utilities;
 using Data.Enums;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebClient.Pages.SpaceX
 {
+	[Authorize]
     public class CapsulesModel : PageModel
     {
 		private readonly IConfiguration config;

@@ -4,10 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Data.Enums;
 using WebClient.Utilities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebClient.Pages.SpaceX
 {
-    public class UpcomingLaunchesModel : PageModel
+	[Authorize]
+	public class UpcomingLaunchesModel : PageModel
     {
 		private readonly IConfiguration config;
 		private readonly ISpaceXRepository spaceXRepository;

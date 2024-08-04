@@ -16,8 +16,6 @@ namespace Data.Interfaces
 		Task AddSpaceXReportAsync(SpaceXReport spaceXReport);
 		Task ModifySpaceXReportAsync(SpaceXReport spaceXReport);
 		Task DeleteSpaceXReportAsync(SpaceXReport spaceXReport);
-		Task<int> GetUserAcountCountAsync();
-		Task<IEnumerable<UserAccount>> GetUserAccountsAsync(int pageIndex, string sortField, SortingDirection sortingDirection, string searchString);
 		void SeedTestData<T>(IEnumerable<T> data);
 	}
 }

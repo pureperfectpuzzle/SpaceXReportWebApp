@@ -24,7 +24,10 @@
 					<span class="fw-bold">Title</span>
 				</a>
 			</th>
-			<th scope="col"></th>
+			@if (Context.User.IsInRole("Admins"))
+			{
+				<th scope="col"></th>
+			}
 		</tr>
 	</thead>
 	<tbody>
@@ -33,26 +36,29 @@
 			<tr>
 				<td>@curReport.Id</td>
 				<td>@curReport.Title</td>
-				<td>
-					<a class="btn btn-outline-primary btn-sm"
-					   asp-controller="Admin"
-					   asp-action="ViewReport"
-					   asp-route-id="@curReport.Id">
-						View
-					</a>
-					<a class="btn btn-outline-primary btn-sm"
-					   asp-controller="Admin"
-					   asp-action="ModifyReport"
-					   asp-route-id="@curReport.Id">
-						Modify
-					</a>
-					<a class="btn btn-outline-primary btn-sm text-danger"
-					   asp-controller="Admin"
-					   asp-action="DeleteReport"
-					   asp-route-id="@curReport.Id">
-						Delete
-					</a>
-				</td>
+				@if (Context.User.IsInRole("Admins"))
+				{
+					<td>
+						<a class="btn btn-outline-primary btn-sm"
+						   asp-controller="Admin"
+						   asp-action="ViewReport"
+						   asp-route-id="@curReport.Id">
+							View
+						</a>
+						<a class="btn btn-outline-primary btn-sm"
+						   asp-controller="Admin"
+						   asp-action="ModifyReport"
+						   asp-route-id="@curReport.Id">
+							Modify
+						</a>
+						<a class="btn btn-outline-primary btn-sm text-danger"
+						   asp-controller="Admin"
+						   asp-action="DeleteReport"
+						   asp-route-id="@curReport.Id">
+							Delete
+						</a>
+					</td>					
+				}
 			</tr>
 		}
 	</tbody>
@@ -60,8 +66,11 @@
 
 <partial name="_PaginationPartial" model="Model.Pagination!" />
 
-<a class="btn btn-lg btn-primary"
-   asp-controller="Admin"
-   asp-action="CreateReport">
-	Create
-</a>
+@if (Context.User.IsInRole("Admins"))
+{
+	<a class="btn btn-lg btn-primary"
+	   asp-controller="Admin"
+	   asp-action="CreateReport">
+		Create
+	</a>
+}

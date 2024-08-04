@@ -1,15 +1,19 @@
 using Data.Enums;
 using Data.Interfaces;
 using Data.Objects.Report;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Repository.Report;
+using Repository.Report.DataAccess;
 using Repository.SpaceX;
 using WebClient.Utilities;
 
 namespace WebClient
 {
-	public class Program
+    public class Program
 	{
-		public static void Main(string[] args)
+		public static async Task Main(string[] args)
 		{
 			var builder = WebApplication.CreateBuilder(args);
 
@@ -18,10 +22,41 @@ namespace WebClient
             builder.Services.AddSingleton<ISpaceXRepository, SpaceXRepository>();
 			builder.Services.AddSingleton<IReportRepository, ReportRepository>();
 
-			builder.Services.AddControllersWithViews();
+			builder.Services.AddDbContext<ReportIdentityDbContext>(options =>
+			{
+				options.UseInMemoryDatabase(databaseName: "ReportIdentityDb");
+			});
+            builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+				.AddEntityFrameworkStores<ReportIdentityDbContext>();
+
+            builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
 
-			var app = builder.Build();
+            builder.Services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireDigit = false;
+
+                options.User.RequireUniqueEmail = false;
+                options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+            });
+
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+
+                options.LoginPath = "/reports/Identity/DisplayLoginView";
+                options.AccessDeniedPath = "/reports/Identity/AccessDenied";
+                options.SlidingExpiration = true;
+            });
+
+            var app = builder.Build();
 
 			// Configure the HTTP request pipeline.
 			if (!app.Environment.IsDevelopment())
@@ -36,20 +71,22 @@ namespace WebClient
 
 			app.UseRouting();
 
+			app.UseAuthentication();
 			app.UseAuthorization();
 
 			app.MapControllers();
 			app.MapControllerRoute("reports", "reports/{controller=Admin}/{action=Index}/{id?}");
 			app.MapRazorPages();
 
-			SeedTestData(app);
+			await SeedTestData(app);
 
 			app.Run();
 		}
 
-		private static void SeedTestData(WebApplication app)
+		private static async Task SeedTestData(WebApplication app)
 		{
-			IReportRepository reportRep = app.Services.GetRequiredService<IReportRepository>();
+			IServiceProvider serviceProvider = app.Services.CreateScope().ServiceProvider;
+			IReportRepository reportRep = serviceProvider.GetRequiredService<IReportRepository>();
 
 			var reports = new List<SpaceXReport>()
 				{
@@ -78,28 +115,47 @@ namespace WebClient
 				};
 			reportRep.SeedTestData(reports);
 
-			var userAccounts = new List<UserAccount>()
+            // Add some user accounts and roles for testing
+			IConfiguration config = serviceProvider.GetRequiredService<IConfiguration>();
+            UserManager<IdentityUser> userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            RoleManager<IdentityRole> roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+			var usersInfo = config.GetSection("UserAccounts").GetChildren();
+			foreach (var userInfo in usersInfo)
 			{
-				new UserAccount()
+				string userName = userInfo["Name"]?? string.Empty;
+				string password = userInfo["Password"]?? string.Empty;
+				string email = userInfo["Email"] ?? string.Empty;
+				string roleName = userInfo["Role"] ?? string.Empty;
+
+				if (string.IsNullOrEmpty(userName) && string.IsNullOrEmpty(password) &&
+					string.IsNullOrEmpty(email) && string.IsNullOrEmpty(roleName))
 				{
-					Id= Guid.NewGuid(),
-					FirstName = "Flynn",
-					LastName = "Xu",
-					Email = "flynnxu@yahoo.com",
-					AccountType = (int)UserAccountType.Regular,
-					Password = "Password", // Encryption!
-				},
-				new UserAccount()
+					continue;
+				}
+
+				if (await userManager.FindByNameAsync(userName) != null)
 				{
-					Id= Guid.NewGuid(),
-					FirstName = "Admin",
-					LastName = "Admin",
-					Email = "admin@google.com",
-					AccountType = (int)UserAccountType.Administrator,
-					Password = "Password", // Encryption!
-				},
-			};
-			reportRep.SeedTestData(userAccounts);
-		}
+					continue;
+				}
+
+				if (await roleManager.FindByNameAsync(roleName) == null)
+				{
+					await roleManager.CreateAsync(new IdentityRole(roleName));
+				}
+
+				IdentityUser user = new IdentityUser
+				{
+					UserName = userName,
+					Email = email,
+				};
+
+				IdentityResult result = await userManager.CreateAsync(user, password);
+				if (result.Succeeded)
+				{
+					await userManager.AddToRoleAsync(user, roleName);
+				}
+			}
+        }
 	}
 }

@@ -122,81 +122,6 @@ namespace Repository.Report
 			}
 		}
 
-		public async Task<int> GetUserAcountCountAsync()
-		{
-			return await this.dbContext.UserAccounts.CountAsync();
-		}
-
-		public async Task<IEnumerable<UserAccount>> GetUserAccountsAsync(int pageIndex, string sortField, SortingDirection sortingDirection, string searchString)
-		{
-			IQueryable<UserAccount> query = this.dbContext.UserAccounts;
-
-			// Filter
-			string trimmedSearchString = searchString.Trim();
-			if (string.IsNullOrEmpty(trimmedSearchString) == false)
-			{
-				query = query.Where(u => (u.FirstName != null && u.FirstName.Contains(trimmedSearchString)) ||
-					(u.LastName != null && u.LastName.Contains(trimmedSearchString)) ||
-					(u.Email != null && u.Email.Contains(trimmedSearchString)) ||
-					string.Compare(trimmedSearchString, (u.AccountType == (int)UserAccountType.Administrator) ? "True" : "False", true) == 0);
-			}
-
-			// Sort
-			if (string.Compare(sortField, "ID", true) == 0)
-			{
-				if (sortingDirection == SortingDirection.Ascending)
-				{
-					query = query.OrderBy(u => u.Id);
-				}
-				else
-				{
-					query = query.OrderByDescending(u => u.Id);
-				}
-			}
-			else if (string.Compare(sortField, "FirstName", true) == 0)
-			{
-				if (sortingDirection == SortingDirection.Ascending)
-				{
-					query = query.OrderBy(u => u.FirstName);
-				}
-				else
-				{
-					query = query.OrderByDescending(u => u.FirstName);
-				}
-			}
-			else if (string.Compare(sortField, "LastName", true) == 0)
-			{
-				if (sortingDirection == SortingDirection.Ascending)
-				{
-					query = query.OrderBy(u => u.LastName);
-				}
-				else
-				{
-					query = query.OrderByDescending(u => u.LastName);
-				}
-			}
-			else if (string.Compare(sortField, "IsAdmin", true) == 0)
-			{
-				if (sortingDirection == SortingDirection.Ascending)
-				{
-					query = query.OrderBy(u => u.AccountType == (int)Data.Enums.UserAccountType.Administrator);
-				}
-				else
-				{
-					query = query.OrderByDescending(u => u.AccountType == (int)Data.Enums.UserAccountType.Administrator);
-				}
-			}
-
-			// Pagination
-			int pageSize = this.queryContext.PageSize;
-			query = query.Skip((pageIndex - 1) * pageSize).Take(pageSize);
-
-			List<UserAccount> userAccountList = new();
-			IEnumerable<UserAccount> userAccounts = await query.ToArrayAsync();
-			userAccountList.AddRange(userAccounts);
-			return userAccountList;
-		}
-
 		#region IDisposable
 
 		public void Dispose()
@@ -231,11 +156,6 @@ namespace Repository.Report
 				IEnumerable<SpaceXReport> reports = data.Cast<SpaceXReport>();
 				this.dbContext.AddRange(reports);
 			}
-			else if (typeof(T) == typeof(UserAccount))
-			{
-                IEnumerable<UserAccount> userAccounts = data.Cast<UserAccount>();
-                this.dbContext.AddRange(userAccounts);
-            }
 
             this.dbContext.SaveChanges();
 		}

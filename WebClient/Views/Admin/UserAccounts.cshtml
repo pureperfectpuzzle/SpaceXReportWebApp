@@ -3,7 +3,7 @@
 	ViewBag.Title = "UserAccounts";
 }
 
-<h3>Reports</h3>
+<h3>User accounts</h3>
 
 <partial name="_SearchStringPartial" model="Model.Pagination!" />
 
@@ -18,24 +18,17 @@
 				</a>
 			</th>
 			<th class="col-4" scope="col">
-				<a asp-route-sortField="FirstName"
-				   asp-route-sortDirection="@Model.Pagination!.GetNextSortingDirection("FirstName")"
+				<a asp-route-sortField="Name"
+				   asp-route-sortDirection="@Model.Pagination!.GetNextSortingDirection("Name")"
 				   asp-route-searchString="@Model.Pagination!.SearchString">
-					<span class="fw-bold">First Name</span>
+					<span class="fw-bold">Name</span>
 				</a>
 			</th>
 			<th class="col-4" scope="col">
-				<a asp-route-sortField="LastName"
-				   asp-route-sortDirection="@Model.Pagination!.GetNextSortingDirection("LastName")"
+				<a asp-route-sortField="Email"
+				   asp-route-sortDirection="@Model.Pagination!.GetNextSortingDirection("Email")"
 				   asp-route-searchString="@Model.Pagination!.SearchString">
-					<span class="fw-bold">Last Name</span>
-				</a>
-			</th>
-			<th class="col-1" scope="col">
-				<a asp-route-sortField="IsAdmin"
-				   asp-route-sortDirection="@Model.Pagination!.GetNextSortingDirection("IsAdmin")"
-				   asp-route-searchString="@Model.Pagination!.SearchString">
-					<span class="fw-bold">Admin?</span>
+					<span class="fw-bold">Email</span>
 				</a>
 			</th>
 		</tr>
@@ -45,9 +38,8 @@
 		{
 			<tr>
 				<td>@curUser.Id</td>
-				<td>@curUser.FirstName</td>
-				<td>@curUser.LastName</td>
-				<td>@(curUser.AccountType == (int)Data.Enums.UserAccountType.Administrator)</td>
+				<td>@curUser.UserName</td>
+				<td>@curUser.Email</td>
 			</tr>
 		}
 	</tbody>

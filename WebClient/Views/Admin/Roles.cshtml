@@ -1,0 +1,52 @@
+﻿@model RoleCollectionModel
+@{
+	ViewBag.Title = "Roles";
+}
+
+<h3>Roles</h3>
+
+<partial name="_SearchStringPartial" model="Model.Pagination!" />
+
+<table class="table table-striped">
+	<tr>
+		<th class="col-3" scope="col">
+			<a asp-route-sortField="ID"
+			   asp-route-sortDirection="@Model.Pagination!.GetNextSortingDirection("ID")"
+			   asp-route-searchString="@Model.Pagination!.SearchString">
+				<span class="fw-bold">ID</span>
+			</a>
+		</th>
+		<th class="col-7" scope="col">
+			<a asp-route-sortField="Name"
+			   asp-route-sortDirection="@Model.Pagination!.GetNextSortingDirection("Name")"
+			   asp-route-searchString="@Model.Pagination!.SearchString">
+				<span class="fw-bold">Name</span>
+			</a>
+		</th>
+		<th></th>
+	</tr>
+	@if (Model.Roles.Count() == 0)
+	{
+		<tr><td colspan="4" class="text-center">No Roles</td></tr>
+	}
+	else
+	{
+		foreach (var role in Model.Roles)
+		{
+			<tr>
+				<td>@role.Id</td>
+				<td>@role.Name</td>
+				<td class="text-center">
+					<input type="hidden" name="Id" value="@role.Id" />
+					<a class="btn btn-sm btn-warning"
+					   asp-action="EditRole"
+					   asp-route-id="@role.Id">
+					   Edit
+				    </a>
+				</td>
+			</tr>
+		}
+	}
+</table>
+
+<partial name="_PaginationPartial" model="Model.Pagination!" />

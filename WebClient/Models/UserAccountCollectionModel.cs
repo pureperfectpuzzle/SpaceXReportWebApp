@@ -1,6 +1,8 @@
 ﻿using Data.Enums;
 using Data.Interfaces;
 using Data.Objects.Report;
+using Data.Objects.SpaceX;
+using Microsoft.AspNetCore.Identity;
 using WebClient.Utilities;
 
 namespace WebClient.Models
@@ -8,25 +10,63 @@ namespace WebClient.Models
 	public class UserAccountCollectionModel
 	{
 		private readonly IConfiguration _config;
-		private readonly IReportRepository _reportRepository;
-		private readonly List<UserAccount> _userAccounts = new List<UserAccount>();
+		private readonly UserManager<IdentityUser> _userManager;
+		private readonly List<IdentityUser> _userAccounts = new List<IdentityUser>();
 		private Pagination? _pagination;
 
-		public UserAccountCollectionModel(IConfiguration config, IReportRepository reportRepository)
+		public UserAccountCollectionModel(IConfiguration config, UserManager<IdentityUser> userManager)
 		{
 			this._config = config;
-			this._reportRepository = reportRepository;
+			this._userManager = userManager;
 		}
 
-		public async Task InitializeAsync(int pageIndex, string sortField,
+		public void Initialize(int pageIndex, string sortField,
 			SortingDirection sortDirection, string searchString)
 		{
-			int itemCount = await this._reportRepository.GetUserAcountCountAsync();
+			int itemCount = this._userManager.Users.Count();
+            IEnumerable<IdentityUser> userAccounts = this._userManager.Users;
 
-			IEnumerable<UserAccount> userAccounts = await this._reportRepository.GetUserAccountsAsync(pageIndex,
-				sortField, sortDirection, searchString);
-			this._userAccounts.Clear();
-			this._userAccounts.AddRange(userAccounts);
+            if (string.IsNullOrEmpty(searchString) == false)
+            {
+                // filter based on string field(s)
+                userAccounts = userAccounts.Where(c => (c.Id?.Contains(searchString, StringComparison.InvariantCultureIgnoreCase)).GetValueOrDefault() ||
+                                                 (c.UserName?.Contains(searchString, StringComparison.InvariantCultureIgnoreCase)).GetValueOrDefault() ||
+                                                 (c.Email?.Contains(searchString, StringComparison.InvariantCultureIgnoreCase)).GetValueOrDefault());
+            }
+
+            if (string.Compare(sortField, "ID", true) == 0)
+            {
+                if (sortDirection == SortingDirection.Ascending)
+                {
+                    userAccounts = userAccounts.OrderBy(u => u.Id);
+                }
+                else
+                {
+                    userAccounts = userAccounts.OrderByDescending(u => u.Id);
+                }
+            }
+            else if (string.Compare(sortField, "Name", true) == 0)
+            {
+                if (sortDirection == SortingDirection.Ascending)
+                {
+                    userAccounts = userAccounts.OrderBy(u => u.UserName);
+                }
+                else
+                {
+                    userAccounts = userAccounts.OrderByDescending(u => u.UserName);
+                }
+            }
+            else if (string.Compare(sortField, "Email", true) == 0)
+            {
+                if (sortDirection == SortingDirection.Ascending)
+                {
+                    userAccounts = userAccounts.OrderBy(u => u.Email);
+                }
+                else
+                {
+                    userAccounts = userAccounts.OrderByDescending(u => u.Email);
+                }
+            }
 
 			this._pagination = new Pagination(_config, itemCount, pageIndex)
 			{
@@ -34,9 +74,13 @@ namespace WebClient.Models
 				SortingField = sortField,
 				SortingDirection = sortDirection,
 			};
+            IEnumerable<IdentityUser> foundUserAccounts = this._pagination.GetPagedObjects(userAccounts);
+
+            this._userAccounts.Clear();
+			this._userAccounts.AddRange(foundUserAccounts);
 		}
 
-		public IEnumerable<UserAccount> UserAccounts => _userAccounts;
+		public IEnumerable<IdentityUser> UserAccounts => _userAccounts;
 
 		internal Pagination? Pagination => _pagination;
 	}

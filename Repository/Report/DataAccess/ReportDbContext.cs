@@ -15,16 +15,11 @@ namespace Repository.Report.DataAccess
 
 		public DbSet<SpaceXReport> SpaceXReports { get; set; }
 
-		public DbSet<UserAccount> UserAccounts { get; set; }
-
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			// TODO: add some schema constraints here!!!
 			modelBuilder.Entity<SpaceXReport>()
 						.HasKey(r => r.Id);
-
-			modelBuilder.Entity<UserAccount>()
-						.HasKey(u => u.Id);
 		}
 	}
 }
