@@ -55,57 +55,89 @@
 
 			<div class="form-group mb-3">
 				<label class="fw-bold" asp-for="Report.Description">Description<span class="text-danger">*</span></label>
-				<textarea class="form-control" rows="5" asp-for="Report.Description" readonly="@Model?.IsReadOnly"></textarea>
+				<textarea class="form-control" 
+				          rows="5" 
+						  asp-for="Report.Description" 
+						  readonly="@Model?.IsReadOnly">
+				</textarea>
 			</div>
 
 			<div class="form-group mb-3">
-				<label class="fw-bold" asp-for="Report.CreatorId">Creator ID</label>
-				<input class="form-control" asp-for="Report.CreatorId" readonly>
+				<label class="fw-bold" asp-for="Report.CreatorId">Creator</label>
+				<select class="form-control" 
+				        asp-for="Report.CreatorId"
+						asp-items="@(new SelectList(Model?.Users, "Id", "UserName"))"
+						disabled>
+				</select>
 			</div>
 		</div>
 		<div class="tab-pane fade m-3"
 			 id="investigation"
 			 role="tabpanel">
 			<div class="form-group mb-3">
-				<label class="fw-bold" asp-for="Report.InvestigatorId">Investigator ID</label>
-				<input class="form-control" asp-for="Report.InvestigatorId" readonly>
+				<label class="fw-bold" asp-for="Report.InvestigatorId">Investigator</label>
+				<select class="form-control" 
+				        asp-for="Report.InvestigatorId"
+						asp-items="@(new SelectList(Model?.Users, "Id", "UserName"))"
+						disabled="@Model?.IsReadOnly">
+					<option value="@Guid.Empty.ToString()" disabled selected>Choose a user...</option>
+				</select>
 			</div>
 
 			<div class="form-group mb-3">
 				<label class="fw-bold" asp-for="Report.InvestigationComments">Comments</label>
-				<textarea class="form-control" rows="5" asp-for="Report.InvestigationComments" readonly></textarea>
+				<textarea class="form-control"
+				          rows="5" 
+						  asp-for="Report.InvestigationComments" 
+						  readonly="@Model?.IsReadOnly">
+				</textarea>
 			</div>
 
 			<div class="form-group mb-3">
 				<label class="fw-bold" asp-for="Report.Solution"></label>
-				<textarea class="form-control" rows="5" asp-for="Report.Solution" readonly></textarea>
+				<textarea class="form-control"
+				          rows="5" 
+						  asp-for="Report.Solution" 
+						  readonly="@Model?.IsReadOnly">
+				</textarea>
 			</div>
 		</div>
 		<div class="tab-pane fade m-3"
 			 id="qa"
 			 role="tabpanel">
 			<div class="form-group mb-3">
-				<label class="fw-bold" asp-for="Report.QaId">QA ID</label>
-				<input class="form-control" asp-for="Report.QaId" readonly>
+				<label class="fw-bold" asp-for="Report.QaId">QA</label>
+				<select class="form-control"
+						asp-for="Report.QaId"
+						asp-items="@(new SelectList(Model?.Users, "Id", "UserName"))"
+						disabled="@Model?.IsReadOnly">
+					<option value="@Guid.Empty.ToString()" disabled selected>Choose a user...</option>
+				</select>
 			</div>
 
 			<div class="form-group mb-3">
 				<label class="fw-bold" asp-for="Report.QaComments">Comments</label>
-				<textarea class="form-control" rows="5" asp-for="Report.QaComments" readonly></textarea>
+				<textarea class="form-control" 
+				          rows="5" 
+						  asp-for="Report.QaComments" 
+						  readonly="@Model?.IsReadOnly">
+				</textarea>
 			</div>
 		</div>
 	</div>
 
-	@if ((Model?.ShowAction).GetValueOrDefault())
-	{
-		<button type="submit"
-				class="btn btn-primary m-2">
-			@Model?.Action
-		</button>
-	}
-	<a class="btn btn-secondary m-2"
-	   asp-controller="Admin"
-	   asp-action="SpaceXReports">
-		Back
-    </a>
+	<div class="text-end">
+		@if ((Model?.ShowAction).GetValueOrDefault())
+		{
+			<button type="submit"
+					class="btn btn-primary my-2">
+				@Model?.Action
+			</button>
+		}
+		<a class="btn btn-secondary my-2 me-2"
+		   asp-controller="Admin"
+		   asp-action="SpaceXReports">
+			Back
+		</a>
+	</div>
 </form>

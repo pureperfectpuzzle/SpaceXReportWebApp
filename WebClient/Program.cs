@@ -86,34 +86,6 @@ namespace WebClient
 		private static async Task SeedTestData(WebApplication app)
 		{
 			IServiceProvider serviceProvider = app.Services.CreateScope().ServiceProvider;
-			IReportRepository reportRep = serviceProvider.GetRequiredService<IReportRepository>();
-
-			var reports = new List<SpaceXReport>()
-				{
-					new SpaceXReport()
-					{
-						Id = Guid.NewGuid(),
-						Title = "Rocket engine failed to ignite",
-						Description = "Rocket was not lifted because its engine was not ignited for some reason. We need to find out why ASAP.",
-						LaunchId = string.Empty,
-						DateOfCreation = new DateTime(2022, 2, 21, 8, 8, 8),
-						InvestigationComments = "I checked the procedure of fuel and found out it was not cold enough.",
-						Solution = "We need to add more stricter QA on fuel preparation.",
-						QaComments = "I did the same as the investigator and agree with him"
-					},
-					new SpaceXReport()
-					{
-						Id = Guid.NewGuid(),
-						Title = "Rocket exploded in air",
-						Description = "Rocket exploded for some reason. Find out what caused this.",
-						LaunchId = string.Empty,
-						DateOfCreation = DateTime.Now,
-						InvestigationComments = "I checked the procedure of rocket assembly.",
-						Solution = "We need to add more stricter QA on rocket assembly.",
-						QaComments = "I did the same as the investigator and agree with him."
-					},
-				};
-			reportRep.SeedTestData(reports);
 
             // Add some user accounts and roles for testing
 			IConfiguration config = serviceProvider.GetRequiredService<IConfiguration>();
@@ -156,6 +128,44 @@ namespace WebClient
 					await userManager.AddToRoleAsync(user, roleName);
 				}
 			}
-        }
+
+			// Add some SpaceX sample reports
+			IReportRepository reportRep = serviceProvider.GetRequiredService<IReportRepository>();
+			IdentityUser? testUser = await userManager.Users.FirstOrDefaultAsync();
+			Guid testUserId = testUser == null ? Guid.Empty : new Guid(testUser.Id);
+
+			var reports = new List<SpaceXReport>()
+				{
+					new SpaceXReport()
+					{
+						Id = Guid.NewGuid(),
+						Title = "Rocket engine failed to ignite",
+						Description = "Rocket was not lifted because its engine was not ignited for some reason. We need to find out why ASAP.",
+						LaunchId = string.Empty,
+						CreatorId = testUserId,
+						DateOfCreation = new DateTime(2022, 2, 21, 8, 8, 8),
+						InvestigatorId = testUserId,
+						InvestigationComments = "I checked the procedure of fuel and found out it was not cold enough.",
+						Solution = "We need to add more stricter QA on fuel preparation.",
+						QaId = testUserId,
+						QaComments = "I did the same as the investigator and agree with him"
+					},
+					new SpaceXReport()
+					{
+						Id = Guid.NewGuid(),
+						Title = "Rocket exploded in air",
+						Description = "Rocket exploded for some reason. Find out what caused this.",
+						LaunchId = string.Empty,
+						CreatorId = testUserId,
+						DateOfCreation = DateTime.Now,
+						InvestigatorId = testUserId,
+						InvestigationComments = "I checked the procedure of rocket assembly.",
+						Solution = "We need to add more stricter QA on rocket assembly.",
+						QaId = testUserId,
+						QaComments = "I did the same as the investigator and agree with him."
+					},
+				};
+			reportRep.SeedTestData(reports);
+		}
 	}
 }

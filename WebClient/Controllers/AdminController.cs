@@ -13,14 +13,17 @@ namespace WebClient.Controllers
     {
         private readonly IConfiguration _config;
         private readonly IReportRepository _reportRepository;
+		private readonly ISpaceXRepository _spaceXRepository;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AdminController(IConfiguration config, IReportRepository reportRepository, 
-            UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
+        public AdminController(IConfiguration config, IReportRepository reportRepository,
+			ISpaceXRepository spaceXRepository,
+			UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             this._config = config;
             this._reportRepository = reportRepository;
+			this._spaceXRepository = spaceXRepository;
             this._userManager = userManager;
             this._roleManager = roleManager;
         }
@@ -40,19 +43,32 @@ namespace WebClient.Controllers
             if (report != null)
             {
                 SpaceXReportModel model = SpaceXReportModelFactory.View(report);
-                return View("SpaceXReportEditor", model);                
+				model.Users = this._userManager.Users;
+				model.Launches = await this._spaceXRepository.GetLaunchesAsync();
+
+				return View("SpaceXReportEditor", model);                
             }
             else
             {
-                return NotFound();
-            }
-        }
+				return RedirectToAction(nameof(SpaceXReports));
+			}
+		}
 
 		[Authorize(Roles = "Admins")]
-		public IActionResult CreateReport()
+		public async Task<IActionResult> CreateReport()
 		{
             SpaceXReport report = new SpaceXReport();
+			IdentityUser? loginUser = await this._userManager.FindByNameAsync((HttpContext.User.Identity?.Name)??string.Empty);
+			if (loginUser != null)
+			{
+				report.CreatorId = new Guid(loginUser!.Id);
+			}
+			report.DateOfCreation = DateTime.Now;
+
 			SpaceXReportModel model = SpaceXReportModelFactory.Create(report);
+			model.Users = this._userManager.Users;
+			model.Launches = await this._spaceXRepository.GetLaunchesAsync();
+
 			return View("SpaceXReportEditor", model);
 		}
 
@@ -80,12 +96,14 @@ namespace WebClient.Controllers
             if (report != null)
             {
 			    SpaceXReportModel model = SpaceXReportModelFactory.Modify(report);
-			    return View("SpaceXReportEditor", model);
+				model.Users = this._userManager.Users;
+				model.Launches = await this._spaceXRepository.GetLaunchesAsync();
+				return View("SpaceXReportEditor", model);
             }
             else
             {
-                return NotFound();
-            }
+				return RedirectToAction(nameof(SpaceXReports));
+			}
 		}
 
         [HttpPost]
@@ -111,11 +129,14 @@ namespace WebClient.Controllers
 			if (report != null)
 			{
 				SpaceXReportModel model = SpaceXReportModelFactory.Delete(report);
+				model.Users = this._userManager.Users;
+				model.Launches = await this._spaceXRepository.GetLaunchesAsync();
+
 				return View("SpaceXReportEditor", model);
 			}
 			else
 			{
-				return NotFound();
+				return RedirectToAction(nameof(SpaceXReports));
 			}
 		}
 

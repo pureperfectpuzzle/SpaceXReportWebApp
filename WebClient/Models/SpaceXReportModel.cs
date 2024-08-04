@@ -1,4 +1,6 @@
 ﻿using Data.Objects.Report;
+using Data.Objects.SpaceX;
+using Microsoft.AspNetCore.Identity;
 
 namespace WebClient.Models
 {
@@ -13,5 +15,9 @@ namespace WebClient.Models
 		public string Title { get; set; } = "Create new report";
 
 		public bool IsReadOnly { get; set; } = false;
+
+		public IEnumerable<IdentityUser> Users { get; set; } = Array.Empty<IdentityUser>();
+
+		public IEnumerable<Launch> Launches { get; set; } = Array.Empty<Launch>();
 	}
 }
